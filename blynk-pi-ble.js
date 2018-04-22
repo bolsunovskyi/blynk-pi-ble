@@ -14,8 +14,8 @@ BlynkLib.Blynk.prototype.connect = function() {
     self.conn.on('error', function(err) { self.error(err);            });
 };
 
-var blynk = new BlynkLib.Blynk('c4151dbd817a491a9e64f5354bb021ad', options = {
-    connector: new blePeripheral.BLEPeripheral()
+var blynk = new BlynkLib.Blynk('--YOUR TOKEN HERE--', options = {
+    connector: new blePeripheral.BLEPeripheral({advertiseName: "Blynk-Raspi"})
 });
 
 var v1 = new blynk.VirtualPin(1);

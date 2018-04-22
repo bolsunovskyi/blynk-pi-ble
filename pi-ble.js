@@ -16,7 +16,7 @@ exports.BLEPeripheral = function(options) {
 
 
     this.connect = function(done) {
-        self.per = require("./peripheral");
+        self.per = require("./peripheral").BLEService(options);
 
         self.per.RXCharacteristic.prototype.onWriteRequest = function(data, offset, withoutResponse, callback) {
             self.emit('data', data);
