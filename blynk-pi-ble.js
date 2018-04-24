@@ -12,6 +12,7 @@ BlynkLib.Blynk.prototype.connect = function() {
         self.conn.on('end',  function()     { self.end();               });
     });
     self.conn.on('error', function(err) { self.error(err);            });
+    self.timerHb = true;
 };
 
 var blynk = new BlynkLib.Blynk('--YOUR TOKEN HERE--', options = {
@@ -19,29 +20,14 @@ var blynk = new BlynkLib.Blynk('--YOUR TOKEN HERE--', options = {
 });
 
 var v1 = new blynk.VirtualPin(1);
-var v2 = new blynk.VirtualPin(2);
-var v3 = new blynk.VirtualPin(3);
-var v4 = new blynk.VirtualPin(4);
-var v5 = new blynk.VirtualPin(5);
+var v9 = new blynk.VirtualPin(9);
 
 v1.on('write', function(param) {
     console.log('V1:', param);
 });
 
-v2.on('write', function(param) {
-    console.log('V2:', param);
-});
-
-v3.on('write', function(param) {
-    console.log('V3:', param);
-});
-
-v4.on('write', function(param) {
-    console.log('V4:', param);
-});
-
-v5.on('write', function(param) {
-    console.log('V5:', param);
+v9.on('read', function() {
+    v9.write(new Date().getSeconds());
 });
 
 blynk.on('connect', function() { console.log("Blynk ready."); });
