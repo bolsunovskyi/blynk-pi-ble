@@ -1,5 +1,6 @@
 var BlynkLib = require('blynk-library');
 var blePeripheral = require('./pi-ble');
+var net = require('net');
 
 BlynkLib.Blynk.prototype.connect = function() {
     var self = this;
@@ -19,11 +20,30 @@ var blynk = new BlynkLib.Blynk('--YOUR TOKEN HERE--', options = {
     connector: new blePeripheral.BLEPeripheral({advertiseName: "Blynk-Raspi"})
 });
 
-var v1 = new blynk.VirtualPin(1);
+var unixClient = net.createConnection("/tmp/led_cloud");
+var socketConnected = false;
+
+unixClient.on("connect", function() {
+    socketConnected = true;
+});
+
+
+var rgb = new blynk.VirtualPin(1);
 var v9 = new blynk.VirtualPin(9);
 
-v1.on('write', function(param) {
-    console.log('V1:', param);
+rgb.on('write', function(param) {
+    if (param.length == 3) {
+        var r = parseInt(param[0]);
+        var g = parseInt(param[1]);
+        var b = parseInt(param[2]);
+        var rgb = rgb | g << 16;
+        rgb = rgb | r << 8;
+        rgb = rgb | b;
+        
+        if (socketConnected) {
+            unixClient.write(rgb.toString());
+        }
+    }
 });
 
 v9.on('read', function() {
